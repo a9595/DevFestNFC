@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
  * Created by tieorange on 25/10/2016.
  */
 public class PersonViewHolder extends RecyclerView.ViewHolder {
-  @BindView(R.id.position) TextView mPosition;
+  @BindView(R.id.pointsAmount) TextView mPosition;
   @BindView(R.id.userId) TextView mUserId;
 
   public PersonViewHolder(View itemView) {

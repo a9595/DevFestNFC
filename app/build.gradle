@@ -38,6 +38,7 @@ dependencies {
 
   // FirebaseUI Database only
   compile 'com.firebaseui:firebase-ui-database:0.6.2'
+  compile 'com.afollestad.material-dialogs:core:0.9.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

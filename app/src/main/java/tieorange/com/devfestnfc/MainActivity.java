@@ -9,6 +9,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 public class MainActivity extends SuperMainActivity {
   @BindView(R.id.recycler) RecyclerView mRecyclerView;
+  private String TAG = MainActivity.class.getCanonicalName();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -21,7 +22,10 @@ public class MainActivity extends SuperMainActivity {
     LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
     layoutManager.setStackFromEnd(true);
     mRecyclerView.setLayoutManager(layoutManager);
+    initAdapter();
+  }
 
+  private void initAdapter() {
     FirebaseRecyclerAdapter<Person, PersonViewHolder> adapter =
         new FirebaseRecyclerAdapter<Person, PersonViewHolder>(Person.class, R.layout.item_person, PersonViewHolder.class,
             mDatabaseReferencePeople.orderByChild("points")) {
@@ -35,6 +39,7 @@ public class MainActivity extends SuperMainActivity {
   }
 
   @OnClick(R.id.fab) public void onClickFAB() {
-    mDatabaseReferencePeople.child("888").setValue(new Person(888, 3));
+    final String nfcId = "123";
+    givePointsToPerson(nfcId);
   }
 }

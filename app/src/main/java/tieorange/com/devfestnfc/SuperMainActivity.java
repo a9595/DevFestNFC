@@ -7,16 +7,20 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import be.appfoundry.nfclibrary.utilities.sync.NfcReadUtilityImpl;
 import butterknife.ButterKnife;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,11 +31,12 @@ import com.google.firebase.database.ValueEventListener;
  * Created by tieorange on 25/10/2016.
  */
 public class SuperMainActivity extends AppCompatActivity {
+  private static final String TAG = SuperMainActivity.class.getCanonicalName();
   private PendingIntent mPendingIntent;
   private IntentFilter[] mIntentFilters;
   private String[][] mTechLists;
   private NfcAdapter mNfcAdapter;
-  private FirebaseDatabase mDatabase;
+  public FirebaseDatabase mDatabase;
   private DatabaseReference mDatabaseReference;
   public DatabaseReference mDatabaseReferencePeople;
 
@@ -66,14 +71,16 @@ public class SuperMainActivity extends AppCompatActivity {
     mDatabaseReferencePeople = mDatabase.getReference("people");
   }
 
-  private void givePointsToPerson(int personId) {
+  protected void givePointsToExistingPerson(String personId) {
     mDatabaseReference = mDatabase.getReference("people/" + personId);
 
     mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {
-        Integer value = dataSnapshot.getValue(Integer.class);
+        Person person = dataSnapshot.getValue(Person.class);
+        if (person == null) return;
 
-        mDatabaseReference.setValue(++value, new DatabaseReference.CompletionListener() {
+        person.points++;
+        mDatabaseReference.setValue(person, new DatabaseReference.CompletionListener() {
           @Override public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
             Toast.makeText(SuperMainActivity.this, "Point added", Toast.LENGTH_SHORT).show();
           }
@@ -106,8 +113,14 @@ public class SuperMainActivity extends AppCompatActivity {
 
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    for (String message : new NfcReadUtilityImpl().readFromTagWithMap(intent).values()) {
-      Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    for (final String message : new NfcReadUtilityImpl().readFromTagWithMap(intent).values()) {
+      showDialog(message, new IPositiveDialog() {
+        @Override public void positive() {
+          givePointsToPerson(message);
+        }
+      });
+
+      return;
     }
   }
 
@@ -129,5 +142,41 @@ public class SuperMainActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  protected void givePointsToNonexistentPerson(String nfcId) {
+    mDatabaseReferencePeople.child(String.valueOf(nfcId)).setValue(new Person(nfcId, 1));
+  }
+
+  protected void givePointsToPerson(final String nfcId) {
+    // get value of current points:
+    DatabaseReference reference = mDatabase.getReference("people/" + nfcId);
+    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override public void onDataChange(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "onDataChange() called with: dataSnapshot = [" + dataSnapshot + "]");
+        Person person = dataSnapshot.getValue(Person.class);
+        if (person == null) {
+          givePointsToNonexistentPerson(nfcId);
+        } else {
+          givePointsToExistingPerson(person.id);
+        }
+      }
+
+      @Override public void onCancelled(DatabaseError databaseError) {
+        Log.d(TAG, "onCancelled() called with: databaseError = [" + databaseError + "]");
+      }
+    });
+  }
+
+  public void showDialog(String userId, final IPositiveDialog iPositiveDialog) {
+    new MaterialDialog.Builder(this).title("Give points to id# " + userId)
+        .positiveText("Oh YESS!!!")
+        .negativeText("No")
+        .onPositive(new MaterialDialog.SingleButtonCallback() {
+          @Override public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+            iPositiveDialog.positive();
+          }
+        })
+        .show();
   }
 }

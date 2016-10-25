@@ -8,22 +8,26 @@
     tools:layout_height="100dp">
 
   <TextView
-      android:id="@+id/position"
+      android:id="@+id/pointsAmount"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
+      android:textSize="@dimen/textSize"
+      android:textStyle="bold"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.19"
       tools:text="1."/>
   <TextView
       android:id="@+id/userId"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      app:layout_constraintBaseline_toBaselineOf="@+id/position"
-      tools:text="777"
-      android:layout_marginStart="50dp"
-      app:layout_constraintLeft_toLeftOf="parent"/>
+      android:layout_marginStart="@dimen/leftMarginSecondColumn"
+      android:textSize="@dimen/textSize"
+      app:layout_constraintBaseline_toBaselineOf="@+id/pointsAmount"
+      app:layout_constraintLeft_toLeftOf="parent"
+      tools:text="777"/>
 </android.support.constraint.ConstraintLayout>
