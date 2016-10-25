@@ -82,7 +82,7 @@ public class SuperMainActivity extends AppCompatActivity {
         person.points++;
         mDatabaseReference.setValue(person, new DatabaseReference.CompletionListener() {
           @Override public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-            Toast.makeText(SuperMainActivity.this, "Point added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuperMainActivity.this, R.string.point_added, Toast.LENGTH_SHORT).show();
           }
         });
       }
@@ -145,7 +145,11 @@ public class SuperMainActivity extends AppCompatActivity {
   }
 
   protected void givePointsToNonexistentPerson(String nfcId) {
-    mDatabaseReferencePeople.child(String.valueOf(nfcId)).setValue(new Person(nfcId, 1));
+    mDatabaseReferencePeople.child(String.valueOf(nfcId)).setValue(new Person(nfcId, 1), new DatabaseReference.CompletionListener() {
+      @Override public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+        Toast.makeText(SuperMainActivity.this, R.string.point_added, Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   protected void givePointsToPerson(final String nfcId) {
