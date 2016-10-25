@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "276380383598",
+    "firebase_url": "https://devfestnfc.firebaseio.com",
+    "project_id": "devfestnfc",
+    "storage_bucket": "devfestnfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276380383598:android:4b4427bba04eeb37",
+        "android_client_info": {
+          "package_name": "tieorange.com.devfestnfc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276380383598-bg1vqi392d13vc8lo57o8ob5blqnd834.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tieorange.com.devfestnfc",
+            "certificate_hash": "08DF84ADB881104C5E2B1F2C3B110E0074A4192F"
+          }
+        },
+        {
+          "client_id": "276380383598-4lalh390d9s07nt581iem06anggf94c6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSQO-WsE_9lyM5o3TrH9RxLNXk2OWQ-bM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276380383598-4lalh390d9s07nt581iem06anggf94c6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
